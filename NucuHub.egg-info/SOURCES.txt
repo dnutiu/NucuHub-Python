@@ -1,6 +1,0 @@
-setup.py
-NucuHub.egg-info/PKG-INFO
-NucuHub.egg-info/SOURCES.txt
-NucuHub.egg-info/dependency_links.txt
-NucuHub.egg-info/not-zip-safe
-NucuHub.egg-info/top_level.txt

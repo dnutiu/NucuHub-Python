@@ -1,4 +1,4 @@
-from infrastructure.redis import RedisService
+from src.infrastructure.redis import RedisService
 
 
 class RedisBackend:

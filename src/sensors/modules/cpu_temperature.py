@@ -1,7 +1,7 @@
 import typing
 
-from sensors.abstractions import SensorMeasurement, SensorModule
-from sensors.config import SensorConfig
+from src.sensors.abstractions import SensorMeasurement, SensorModule
+from src.sensors.config import SensorConfig
 
 
 class CpuTemperature(SensorModule):
@@ -12,7 +12,7 @@ class CpuTemperature(SensorModule):
             id="cpu_temperature_sensor",
             name="Cpu Temp",
             description="Outputs the CPU temperature in celsius",
-            enabled=False,
+            enabled=True,
         )
 
     def _get_data(self) -> typing.List[SensorMeasurement]:

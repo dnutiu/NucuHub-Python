@@ -1,4 +1,4 @@
-from sensors.modules import CpuTemperature
+from src.sensors.modules import CpuTemperature
 
 
 def test_cpu_temperature_read():

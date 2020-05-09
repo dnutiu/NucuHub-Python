@@ -2,9 +2,9 @@ import abc
 import typing
 from dataclasses import dataclass
 
-from domain.exceptions import SensorException
-from sensors.config import SensorConfig
-from sensors.infrastructure import Database
+from src.domain.exceptions import SensorException
+from src.sensors.config import SensorConfig
+from src.sensors.infrastructure import Database
 
 
 @dataclass

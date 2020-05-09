@@ -1,5 +1,5 @@
-from domain.config import ApplicationConfig
-from domain.logging import get_logger
+from src.domain.config import ApplicationConfig
+from src.domain.logging import get_logger
 
 logger = get_logger("RedisService")
 
