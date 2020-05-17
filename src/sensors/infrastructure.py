@@ -1,3 +1,5 @@
+import json
+
 from src.infrastructure.redis import RedisService
 
 
@@ -10,7 +12,8 @@ class RedisBackend:
 
 class Messaging(RedisBackend):
     def publish(self, data):
-        pass  # TODO push to redis
+        redis = self.client.get_redis()
+        redis.publish("sensors", json.dumps(data))
 
 
 class Database(RedisBackend):

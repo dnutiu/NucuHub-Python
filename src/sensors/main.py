@@ -7,7 +7,7 @@ import typing
 
 from src.domain.logging import get_logger
 from src.sensors import infrastructure
-from src.sensors.abstractions import SensorModule, SensorMeasurement
+from src.sensors.abstractions import SensorMeasurement, SensorModule
 
 
 class SensorsWorker:

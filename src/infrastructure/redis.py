@@ -1,3 +1,5 @@
+import redis
+
 from src.domain.config import ApplicationConfig
 from src.domain.logging import get_logger
 
@@ -6,9 +8,9 @@ logger = get_logger("RedisService")
 
 class RedisService:
     __singleton = None
-    __connection_pool = None
+    __client = None
 
-    def __init__(self, redis_url):
+    def __init__(self):
         """
             Don't call this method directly instead use instance.
         """
@@ -19,7 +21,8 @@ class RedisService:
         if cls.__singleton is None:
             redis_url = ApplicationConfig.REDIS_URL
             logger.info(f"RedisSingleton: Setting Connection String={redis_url}")
-            cls.__singleton = cls(redis_url=redis_url)
+            cls.__singleton = cls()
+            cls.__client = redis.Redis(redis_url)
         return cls.__singleton
 
     @classmethod
@@ -27,4 +30,4 @@ class RedisService:
         cls.__singleton = singleton
 
     def get_redis(self):
-        pass
+        return self.__client
