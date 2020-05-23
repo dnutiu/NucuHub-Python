@@ -19,10 +19,10 @@ class RedisService:
     @classmethod
     def instance(cls):
         if cls.__singleton is None:
-            redis_url = ApplicationConfig.REDIS_URL
-            logger.info(f"RedisSingleton: Setting Connection String={redis_url}")
+            cls.redis_url = ApplicationConfig.REDIS_URL
+            logger.info(f"RedisSingleton: Setting Connection String={cls.redis_url}")
             cls.__singleton = cls()
-            cls.__client = redis.Redis(redis_url)
+            cls.__client = redis.Redis(cls.redis_url)
         return cls.__singleton
 
     @classmethod
