@@ -26,7 +26,7 @@ class DummySensor(SensorModule):
         ]
 
 
-def test_sensor_module_read():
+def test_sensor_module_read(redis_fixture):
     # normal read
     sensor = DummySensor()
     sensor.enable()
@@ -37,7 +37,7 @@ def test_sensor_module_read():
         sensor.get_data()
 
 
-def test_sensor_module_initialize():
+def test_sensor_module_initialize(redis_fixture):
     # Copy the class in order to avoid un-setting the mocks.
     dummy_sensor = type(
         "DummySensorCopy", DummySensor.__bases__, dict(DummySensor.__dict__)
@@ -57,7 +57,7 @@ def test_sensor_module_initialize():
         pytest.param("is_enabled", False),
     ],
 )
-def test_sensor_module_getters(getter, expected):
+def test_sensor_module_getters(redis_fixture, getter, expected):
     sensor = DummySensor()
     assert getattr(sensor, getter) == expected
 
@@ -65,7 +65,7 @@ def test_sensor_module_getters(getter, expected):
 @pytest.mark.parametrize(
     "action, expected", [pytest.param("enable", True), pytest.param("disable", False)]
 )
-def test_sensor_module_enabling(action, expected):
+def test_sensor_module_enabling(redis_fixture, action, expected):
     sensor = DummySensor()
     # Call the method
     getattr(sensor, action)()

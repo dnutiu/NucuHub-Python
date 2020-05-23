@@ -18,7 +18,13 @@ class Messaging(RedisBackend):
 
 class Database(RedisBackend):
     def save_config(self, name, data):
-        pass  # TODO save to redis
+        redis = self.client.get_redis()
+        redis.set(name, json.dumps(data))
 
     def load_config(self, name):
-        pass  # TODO load from redis
+        redis = self.client.get_redis()
+        data = redis.get(name)
+        return_val = None
+        if data:
+            return_val = json.loads(data.decode())
+        return return_val

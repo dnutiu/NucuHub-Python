@@ -1,7 +1,7 @@
 from src.sensors.modules import CpuTemperature
 
 
-def test_cpu_temperature_read():
+def test_cpu_temperature_read(redis_fixture):
     sensor = CpuTemperature()
     sensor.enable()
     data = sensor.get_data()

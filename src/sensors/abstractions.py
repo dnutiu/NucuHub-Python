@@ -22,12 +22,13 @@ class SensorModule(abc.ABC):
         self._initialize()
 
     def _save_config(self):
-        self._db.save_config(self._config.id, self._config)
+        if self._config:
+            self._db.save_config(self._config.id, self._config.__dict__)
 
     def _load_config(self):
         old_config = self._db.load_config(self._config.id)
         if old_config:
-            self._config = old_config
+            self._config = SensorConfig(**old_config)
 
     def _initialize(self):
         self._config = self._configure()
