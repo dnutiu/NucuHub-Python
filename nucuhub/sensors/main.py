@@ -5,9 +5,9 @@ import pkgutil
 import time
 import typing
 
-from src.domain.logging import get_logger
-from src.sensors import infrastructure
-from src.sensors.abstractions import SensorMeasurement, SensorModule
+from nucuhub.domain.logging import get_logger
+from nucuhub.sensors import infrastructure
+from nucuhub.sensors.abstractions import SensorMeasurement, SensorModule
 
 
 class SensorsWorker:
@@ -26,7 +26,7 @@ class SensorsWorker:
         module_path = pathlib.Path(__file__).parent / "modules"
         for (_, submodule_name, _) in pkgutil.iter_modules([module_path]):
             module = importlib.import_module(
-                f".modules.{submodule_name}", package="src.sensors"
+                f".modules.{submodule_name}", package="nucuhub.sensors"
             )
             for mod in dir(module):
                 if mod.startswith("_") or mod == "SensorModule":

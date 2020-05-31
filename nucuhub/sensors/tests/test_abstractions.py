@@ -4,9 +4,9 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from src.domain.exceptions import SensorException
-from src.sensors.abstractions import SensorMeasurement, SensorModule
-from src.sensors.config import SensorConfig
+from nucuhub.domain.exceptions import SensorException
+from nucuhub.sensors.abstractions import SensorMeasurement, SensorModule
+from nucuhub.sensors.config import SensorConfig
 
 
 class DummySensor(SensorModule):

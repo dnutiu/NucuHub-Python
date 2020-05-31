@@ -1,7 +1,7 @@
 import redis
 
-from src.domain.config import ApplicationConfig
-from src.domain.logging import get_logger
+from nucuhub.domain.config import ApplicationConfig
+from nucuhub.domain.logging import get_logger
 
 logger = get_logger("RedisService")
 

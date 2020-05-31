@@ -1,6 +1,6 @@
 import json
 
-from src.infrastructure.redis import RedisService
+from nucuhub.infrastructure.redis import RedisService
 
 
 class RedisBackend:

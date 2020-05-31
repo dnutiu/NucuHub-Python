@@ -1,4 +1,4 @@
-from src.sensors.modules import CpuTemperature
+from nucuhub.sensors.modules import CpuTemperature
 
 
 def test_cpu_temperature_read(redis_fixture):

@@ -2,9 +2,9 @@ import abc
 import typing
 from dataclasses import dataclass
 
-from src.domain.exceptions import SensorException
-from src.sensors.config import SensorConfig
-from src.sensors.infrastructure import Database
+from nucuhub.domain.exceptions import SensorException
+from nucuhub.sensors.config import SensorConfig
+from nucuhub.sensors.infrastructure import Database
 
 
 @dataclass

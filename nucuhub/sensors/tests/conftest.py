@@ -1,7 +1,7 @@
 import pytest
 
-from src.domain.config import ApplicationConfig
-from src.infrastructure.redis import RedisService
+from nucuhub.domain.config import ApplicationConfig
+from nucuhub.infrastructure.redis import RedisService
 
 
 @pytest.fixture

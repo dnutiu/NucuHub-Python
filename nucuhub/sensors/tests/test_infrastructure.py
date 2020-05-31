@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from src.sensors.infrastructure import Database, Messaging
+from nucuhub.sensors.infrastructure import Database, Messaging
 
 
 @pytest.mark.parametrize(

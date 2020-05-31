@@ -1,7 +1,7 @@
 import typing
 
-from src.sensors.abstractions import SensorMeasurement, SensorModule
-from src.sensors.config import SensorConfig
+from nucuhub.sensors.abstractions import SensorMeasurement, SensorModule
+from nucuhub.sensors.config import SensorConfig
 
 
 class CpuTemperature(SensorModule):
