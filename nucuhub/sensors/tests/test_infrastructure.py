@@ -1,4 +1,5 @@
 import json
+import time
 
 import pytest
 
@@ -20,6 +21,7 @@ def test_messaging_publish(redis_fixture, message_data):
     pub_sub.subscribe("sensors")
 
     messaging = Messaging()
+    time.sleep(0.1)
     messaging.publish(message_data)
 
     pub_sub.get_message()
