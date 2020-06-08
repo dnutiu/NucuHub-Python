@@ -66,7 +66,7 @@ class SensorModule(abc.ABC):
     @property
     def is_enabled(self) -> bool:
         """
-            Quries if the sensor is enabled or not.
+            Queries if the sensor is enabled or not.
         """
         return self._config.enabled
 
