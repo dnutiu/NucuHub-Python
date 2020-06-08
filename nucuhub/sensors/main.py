@@ -49,14 +49,7 @@ class SensorsWorker:
             # Iterate through all sensors and retrieve data
             for sensor in loaded_modules:
                 if sensor.is_enabled:
-                    json_data = [
-                        {
-                            "name": item.name,
-                            "description": item.description,
-                            "value": item.value,
-                        }
-                        for item in sensor.get_data()
-                    ]
+                    json_data = [item.__dict__ for item in sensor.get_data()]
                     all_data.extend(json_data)
             self.message_broker.publish(all_data)
             time.sleep(self.sleep_time)

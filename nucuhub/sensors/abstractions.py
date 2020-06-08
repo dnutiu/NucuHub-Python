@@ -3,7 +3,7 @@ import typing
 from dataclasses import dataclass
 
 from nucuhub.domain.exceptions import SensorException
-from nucuhub.sensors.config import SensorConfig
+from nucuhub.sensors.config import SensorConfig, SensorState
 from nucuhub.sensors.infrastructure import Database
 
 
@@ -70,6 +70,13 @@ class SensorModule(abc.ABC):
         """
         return self._config.enabled
 
+    @property
+    def state(self) -> str:
+        """
+            Queries the state the sensor is in. Valid states are defined in the SensorState enum.
+        """
+        return self._config.state
+
     def get_data(self) -> typing.List[SensorMeasurement]:
         """
             Performs a sensor read and returns the data.
@@ -95,3 +102,10 @@ class SensorModule(abc.ABC):
         if self._config.enabled:
             self._config.enabled = False
             self._save_config()
+
+    def set_state(self, sensor_state: SensorState):
+        """
+            Sets the sensor state.
+        """
+        self._config.state = sensor_state.value
+        self._save_config()

@@ -6,7 +6,7 @@ import pytest
 
 from nucuhub.domain.exceptions import SensorException
 from nucuhub.sensors.abstractions import SensorMeasurement, SensorModule
-from nucuhub.sensors.config import SensorConfig
+from nucuhub.sensors.config import SensorConfig, SensorState
 
 
 class DummySensor(SensorModule):
@@ -74,3 +74,18 @@ def test_sensor_module_enabling(redis_fixture, action, expected):
     getattr(sensor, action)()
     # Compare the values
     assert sensor.is_enabled == expected
+
+
+@pytest.mark.parametrize(
+    "action, expected",
+    [
+        pytest.param("set_state", SensorState.OK, id="state_ok"),
+        pytest.param("set_state", SensorState.ERROR, id="state_error"),
+    ],
+)
+def test_sensor_module_set_state(redis_fixture, action, expected):
+    sensor = DummySensor()
+    # Call the method
+    getattr(sensor, action)(expected)
+    # Compare the values
+    assert sensor.state == expected.value

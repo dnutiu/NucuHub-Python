@@ -1,7 +1,7 @@
 import typing
 
 from nucuhub.sensors.abstractions import SensorMeasurement, SensorModule
-from nucuhub.sensors.config import SensorConfig
+from nucuhub.sensors.config import SensorConfig, SensorState
 
 
 class CpuTemperature(SensorModule):
@@ -17,13 +17,17 @@ class CpuTemperature(SensorModule):
         )
 
     def _get_data(self) -> typing.List[SensorMeasurement]:
-        with open(self.file_name) as fd:
-            data = fd.readline()
-        return [
-            SensorMeasurement(
-                sensor_id=self.sensor_id,
-                name="thermal_zone2",
-                description="CPU package temperature in celsius",
-                value=float(data) / 1000,
-            )
-        ]
+        try:
+            with open(self.file_name) as fd:
+                data = fd.readline()
+            return [
+                SensorMeasurement(
+                    sensor_id=self.sensor_id,
+                    name="thermal_zone2",
+                    description="CPU package temperature in celsius",
+                    value=float(data) / 1000,
+                )
+            ]
+        except IOError:
+            self.set_state(SensorState.ERROR)
+            return []
