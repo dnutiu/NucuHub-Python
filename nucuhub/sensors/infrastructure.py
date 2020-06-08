@@ -1,6 +1,9 @@
 import json
 
+from nucuhub.domain.logging import get_logger
 from nucuhub.infrastructure.redis import RedisService
+
+logger = get_logger("sensors.infrastructure")
 
 
 class RedisBackend:
@@ -13,6 +16,7 @@ class RedisBackend:
 class Messaging(RedisBackend):
     def publish(self, data):
         redis = self.client.get_redis()
+        logger.debug(data)
         redis.publish("sensors", json.dumps(data))
 
 

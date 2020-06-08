@@ -5,11 +5,12 @@ from nucuhub.sensors.config import SensorConfig
 
 
 class CpuTemperature(SensorModule):
-    file_name = "/sys/class/thermal/thermal_zone2/temp"
+    sensor_id = "cpu_temperature_sensor"
+    file_name = "/sys/class/thermal/thermal_zone3/temp"
 
     def _configure(self) -> SensorConfig:
         return SensorConfig(
-            id="cpu_temperature_sensor",
+            id=self.sensor_id,
             name="Cpu Temp",
             description="Outputs the CPU temperature in celsius",
             enabled=True,
@@ -20,6 +21,7 @@ class CpuTemperature(SensorModule):
             data = fd.readline()
         return [
             SensorMeasurement(
+                sensor_id=self.sensor_id,
                 name="thermal_zone2",
                 description="CPU package temperature in celsius",
                 value=float(data) / 1000,

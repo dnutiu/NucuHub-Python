@@ -1,5 +1,4 @@
 import importlib
-import logging
 import pathlib
 import pkgutil
 import time
@@ -7,7 +6,7 @@ import typing
 
 from nucuhub.domain.logging import get_logger
 from nucuhub.sensors import infrastructure
-from nucuhub.sensors.abstractions import SensorMeasurement, SensorModule
+from nucuhub.sensors.abstractions import SensorModule
 
 
 class SensorsWorker:
@@ -50,8 +49,15 @@ class SensorsWorker:
             # Iterate through all sensors and retrieve data
             for sensor in loaded_modules:
                 if sensor.is_enabled:
-                    all_data.extend(sensor.get_data())
-
+                    json_data = [
+                        {
+                            "name": item.name,
+                            "description": item.description,
+                            "value": item.value,
+                        }
+                        for item in sensor.get_data()
+                    ]
+                    all_data.extend(json_data)
             self.message_broker.publish(all_data)
             time.sleep(self.sleep_time)
 

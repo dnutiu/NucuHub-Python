@@ -21,7 +21,10 @@ class DummySensor(SensorModule):
     def _get_data(self) -> typing.List[SensorMeasurement]:
         return [
             SensorMeasurement(
-                name="test", description="test", value=random.choice([1, 0])
+                sensor_id="dummy_sensor",
+                name="test",
+                description="test",
+                value=random.choice([1, 0]),
             )
         ]
 

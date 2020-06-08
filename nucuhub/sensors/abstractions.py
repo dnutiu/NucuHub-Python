@@ -9,6 +9,7 @@ from nucuhub.sensors.infrastructure import Database
 
 @dataclass
 class SensorMeasurement:
+    sensor_id: str
     name: str
     description: str
     value: typing.Union[int, float, str]
