@@ -1,0 +1,16 @@
+#
+# Production docker compose file, should be run directly on the raspberry pi.
+# Run with: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#
+version: '3.3'
+
+services:
+  nucuhub_sensors:
+    restart: on-failure
+    depends_on:
+      - redis_service
+    build:
+      context: .
+      dockerfile: ./nucuhub/sensors/Dockerfile
+    networks:
+      - nucuhub

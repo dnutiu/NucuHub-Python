@@ -1,4 +1,5 @@
 version: '3.3'
+
 services:
   redis_service:
     image: redis
@@ -8,3 +9,9 @@ services:
     volumes:
     - ./data/redis:/data
     restart: unless-stopped
+    networks:
+      - nucuhub
+
+networks:
+  nucuhub:
+    driver: bridge
