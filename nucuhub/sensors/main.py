@@ -18,7 +18,7 @@ class SensorsWorker:
         self.sleep_time = 1
 
         self._reading_loop_should_run = True
-        self._pubsub_loop_should_run = True
+        self._command_loop_should_run = True
         self._worker_loop_should_run = True
 
         self.sensor_modules = self._import_sensor_modules()
@@ -55,7 +55,7 @@ class SensorsWorker:
                 'action' 'enable/disable'
             }
         """
-        while self._pubsub_loop_should_run:
+        while self._command_loop_should_run:
             message = self.message_broker.get_message()
             self.logger.debug(f"received cmd message: {message}")
             if message:
@@ -101,7 +101,7 @@ class SensorsWorker:
         self.logger.info("Looping forever!")
         with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
             reading_loop = executor.submit(self._reading_loop)
-            pubsub_loop = executor.submit(self._pubsub_loop)
+            command_loop = executor.submit(self._pubsub_loop)
             while self._worker_loop_should_run:
                 try:
                     if not reading_loop.running() and self._worker_loop_should_run:
@@ -111,10 +111,10 @@ class SensorsWorker:
                         )
                         reading_loop = executor.submit(self._reading_loop)
                         time.sleep(2)
-                    if not pubsub_loop.running() and self._worker_loop_should_run:
-                        pubsub_loop.cancel()
+                    if not command_loop.running() and self._worker_loop_should_run:
+                        command_loop.cancel()
                         self.logger.warning(
-                            f"restarting pubsub_loop because it's not running! {pubsub_loop.exception(timeout=2)}"
+                            f"restarting command_loop because it's not running! {command_loop.exception(timeout=2)}"
                         )
                         reading_loop = executor.submit(self._pubsub_loop)
                         time.sleep(2)
@@ -126,7 +126,7 @@ class SensorsWorker:
     def shutdown(self, signum, frame):
         self.logger.info("Shutting down... waiting for loops to finish work.")
         self._worker_loop_should_run = False
-        self._pubsub_loop_should_run = False
+        self._command_loop_should_run = False
         self._reading_loop_should_run = False
 
 
