@@ -1,32 +1,10 @@
-import random
-import typing
 from unittest.mock import MagicMock
 
 import pytest
 
 from nucuhub.domain.exceptions import SensorException
-from nucuhub.sensors.abstractions import SensorMeasurement, SensorModule
-from nucuhub.sensors.config import SensorConfig, SensorState
-
-
-class DummySensor(SensorModule):
-    def _configure(self):
-        return SensorConfig(
-            id="tid",
-            name="test-sesnro",
-            description="the test description",
-            enabled=False,
-        )
-
-    def _get_data(self) -> typing.List[SensorMeasurement]:
-        return [
-            SensorMeasurement(
-                sensor_id="dummy_sensor",
-                name="test",
-                description="test",
-                value=random.choice([1, 0]),
-            )
-        ]
+from nucuhub.sensors.config import SensorState
+from nucuhub.sensors.tests.mocks import DummySensor
 
 
 def test_sensor_module_read(redis_fixture):

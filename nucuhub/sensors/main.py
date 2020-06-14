@@ -46,7 +46,11 @@ class SensorsWorker:
         self.logger.debug(f"Loaded the following sensor modules: {sensor_modules}")
         return sensor_modules
 
-    def _pubsub_loop(self):
+    def _load_modules(self):
+        for m in self.sensor_modules:
+            self.loaded_sensor_modules.append(m())
+
+    def _command_loop(self):
         """
             Listens to sensor config messages.
             Example:
@@ -76,9 +80,6 @@ class SensorsWorker:
         """
             Loops through sensors and publises data.
         """
-        for m in self.sensor_modules:
-            self.loaded_sensor_modules.append(m())
-
         while self._reading_loop_should_run:
             all_data = []
             # Iterate through all sensors and retrieve data
@@ -99,9 +100,11 @@ class SensorsWorker:
         signal.signal(signal.SIGTSTP, self.shutdown)
 
         self.logger.info("Looping forever!")
+        self._load_modules()
+
         with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
             reading_loop = executor.submit(self._reading_loop)
-            command_loop = executor.submit(self._pubsub_loop)
+            command_loop = executor.submit(self._command_loop)
             while self._worker_loop_should_run:
                 try:
                     if not reading_loop.running() and self._worker_loop_should_run:
@@ -116,7 +119,7 @@ class SensorsWorker:
                         self.logger.warning(
                             f"restarting command_loop because it's not running! {command_loop.exception(timeout=2)}"
                         )
-                        reading_loop = executor.submit(self._pubsub_loop)
+                        reading_loop = executor.submit(self._command_loop)
                         time.sleep(2)
                 except concurrent.futures.CancelledError as e:
                     # We get a canceled error when we cancel tasks.
