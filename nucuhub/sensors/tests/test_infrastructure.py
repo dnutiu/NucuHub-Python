@@ -21,10 +21,9 @@ def test_messaging_publish(redis_fixture, message_data):
     pub_sub.subscribe("sensors")
 
     messaging = Messaging()
-    time.sleep(0.1)
     messaging.publish(message_data)
 
-    pub_sub.get_message()
+    _ = pub_sub.get_message()
     message = pub_sub.get_message()
 
     assert json.loads(message["data"]) == message_data

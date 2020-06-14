@@ -14,10 +14,24 @@ class RedisBackend:
 
 
 class Messaging(RedisBackend):
+    def __init__(self):
+        super().__init__()
+        self._pubsub = self.client.get_redis().pubsub()
+        self._pubsub.subscribe("sensors_cmd")
+
     def publish(self, data):
         redis = self.client.get_redis()
         logger.debug(data)
         redis.publish("sensors", json.dumps(data))
+
+    def get_message(self):
+        try:
+            message = self._pubsub.get_message(
+                ignore_subscribe_messages=True, timeout=1
+            )
+            return json.loads(message.get("data"))
+        except (TypeError, AttributeError):
+            return None
 
 
 class Database(RedisBackend):

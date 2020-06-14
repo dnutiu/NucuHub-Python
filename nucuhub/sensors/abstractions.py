@@ -50,6 +50,10 @@ class SensorModule(abc.ABC):
         raise NotImplementedError()
 
     @property
+    def id(self) -> str:
+        return self._config.id
+
+    @property
     def name(self) -> str:
         """
             Returns a friendly name for the sensor.

@@ -1,6 +1,8 @@
+import concurrent.futures
 import importlib
 import pathlib
 import pkgutil
+import signal
 import time
 import typing
 
@@ -15,7 +17,12 @@ class SensorsWorker:
         self.logger = get_logger("SensorWorker")
         self.sleep_time = 1
 
+        self._reading_loop_should_run = True
+        self._pubsub_loop_should_run = True
+        self._worker_loop_should_run = True
+
         self.sensor_modules = self._import_sensor_modules()
+        self.loaded_sensor_modules = []
 
     def _import_sensor_modules(self) -> typing.List[typing.Type[SensorModule]]:
         """
@@ -39,15 +46,43 @@ class SensorsWorker:
         self.logger.debug(f"Loaded the following sensor modules: {sensor_modules}")
         return sensor_modules
 
-    def _loop(self):
-        loaded_modules = []
-        for m in self.sensor_modules:
-            loaded_modules.append(m())
+    def _pubsub_loop(self):
+        """
+            Listens to sensor config messages.
+            Example:
+            {
+                'sensor_id': 'cpu_temperature_sensor'
+                'action' 'enable/disable'
+            }
+        """
+        while self._pubsub_loop_should_run:
+            message = self.message_broker.get_message()
+            self.logger.debug(f"received cmd message: {message}")
+            if message:
+                sensor_id = message.get("sensor_id")
+                action = message.get("action")
+                if action not in ("enable", "disable"):
+                    continue
+                for sensor in self.loaded_sensor_modules:
+                    if sensor.id == sensor_id:
+                        getattr(sensor, action)()
+                        self.logger.info(
+                            f"ran the action '{action}' on sensor: {sensor_id}."
+                        )
+                        break
+            time.sleep(self.sleep_time)
 
-        while True:
+    def _reading_loop(self):
+        """
+            Loops through sensors and publises data.
+        """
+        for m in self.sensor_modules:
+            self.loaded_sensor_modules.append(m())
+
+        while self._reading_loop_should_run:
             all_data = []
             # Iterate through all sensors and retrieve data
-            for sensor in loaded_modules:
+            for sensor in self.loaded_sensor_modules:
                 if sensor.is_enabled:
                     json_data = [item.__dict__ for item in sensor.get_data()]
                     all_data.extend(json_data)
@@ -59,12 +94,40 @@ class SensorsWorker:
             Looping forever.
             It polls the sensors and publishes the data to the via Messaging.
         """
+        signal.signal(signal.SIGINT, self.shutdown)
+        signal.signal(signal.SIGTERM, self.shutdown)
+        signal.signal(signal.SIGTSTP, self.shutdown)
+
         self.logger.info("Looping forever!")
-        try:
-            self._loop()
-            # todo add loop for listening to redis for config changes
-        except KeyboardInterrupt:
-            self.logger.info("Shutting down...")
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+            reading_loop = executor.submit(self._reading_loop)
+            pubsub_loop = executor.submit(self._pubsub_loop)
+            while self._worker_loop_should_run:
+                try:
+                    if not reading_loop.running() and self._worker_loop_should_run:
+                        reading_loop.cancel()
+                        self.logger.warning(
+                            f"restarting reading_loop because it's not running! {reading_loop.exception(timeout=2)}"
+                        )
+                        reading_loop = executor.submit(self._reading_loop)
+                        time.sleep(2)
+                    if not pubsub_loop.running() and self._worker_loop_should_run:
+                        pubsub_loop.cancel()
+                        self.logger.warning(
+                            f"restarting pubsub_loop because it's not running! {pubsub_loop.exception(timeout=2)}"
+                        )
+                        reading_loop = executor.submit(self._pubsub_loop)
+                        time.sleep(2)
+                except concurrent.futures.CancelledError as e:
+                    # We get a canceled error when we cancel tasks.
+                    self.logger.warning(e)
+                time.sleep(self.sleep_time)
+
+    def shutdown(self, signum, frame):
+        self.logger.info("Shutting down... waiting for loops to finish work.")
+        self._worker_loop_should_run = False
+        self._pubsub_loop_should_run = False
+        self._reading_loop_should_run = False
 
 
 def main():
