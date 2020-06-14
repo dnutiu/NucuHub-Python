@@ -1,6 +1,6 @@
 import pytest
 
-from nucuhub.domain.config import ApplicationConfig
+from nucuhub.config import ApplicationConfig
 from nucuhub.infrastructure.redis import RedisService
 
 

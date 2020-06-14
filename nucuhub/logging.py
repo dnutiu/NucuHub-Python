@@ -1,6 +1,6 @@
 import logging
 
-from nucuhub.domain.config import ApplicationConfig
+from nucuhub.config import ApplicationConfig
 
 
 def level_name_to_level(level_name: str) -> int:

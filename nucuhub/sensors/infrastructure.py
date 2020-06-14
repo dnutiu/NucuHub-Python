@@ -1,7 +1,7 @@
 import json
 
-from nucuhub.domain.logging import get_logger
 from nucuhub.infrastructure.redis import RedisService
+from nucuhub.logging import get_logger
 
 logger = get_logger("sensors.infrastructure")
 

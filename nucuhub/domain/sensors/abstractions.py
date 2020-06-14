@@ -2,7 +2,7 @@ import abc
 import typing
 from dataclasses import dataclass
 
-from nucuhub.domain.exceptions import SensorException
+from nucuhub.domain.sensors.exceptions import SensorException
 from nucuhub.sensors.config import SensorConfig, SensorState
 from nucuhub.sensors.infrastructure import Database
 

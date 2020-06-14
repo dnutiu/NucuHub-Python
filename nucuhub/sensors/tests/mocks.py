@@ -1,7 +1,7 @@
 import random
 import typing
 
-from nucuhub.sensors.abstractions import SensorMeasurement, SensorModule
+from nucuhub.domain.sensors import SensorMeasurement, SensorModule
 from nucuhub.sensors.config import SensorConfig
 
 
