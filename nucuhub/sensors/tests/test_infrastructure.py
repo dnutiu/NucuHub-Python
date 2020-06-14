@@ -23,6 +23,7 @@ def test_messaging_publish(redis_fixture, message_data):
     messaging = Messaging()
     messaging.publish(message_data)
 
+    time.sleep(0.1)
     _ = pub_sub.get_message()
     message = pub_sub.get_message()
 
