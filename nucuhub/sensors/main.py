@@ -15,7 +15,7 @@ class SensorsWorker:
     def __init__(self):
         self.message_broker = infrastructure.Messaging()
         self.logger = get_logger("SensorWorker")
-        self.sleep_time = 1
+        self.sleep_time = 10
 
         self._reading_loop_should_run = True
         self._command_loop_should_run = True
@@ -110,14 +110,14 @@ class SensorsWorker:
                     if not reading_loop.running() and self._worker_loop_should_run:
                         reading_loop.cancel()
                         self.logger.warning(
-                            f"restarting reading_loop because it's not running! {reading_loop.exception(timeout=2)}"
+                            f"restarting reading_loop because it's not running! Err: {reading_loop.exception(timeout=2)}"
                         )
                         reading_loop = executor.submit(self._reading_loop)
                         time.sleep(2)
                     if not command_loop.running() and self._worker_loop_should_run:
                         command_loop.cancel()
                         self.logger.warning(
-                            f"restarting command_loop because it's not running! {command_loop.exception(timeout=2)}"
+                            f"restarting command_loop because it's not running! Err: {command_loop.exception(timeout=2)}"
                         )
                         reading_loop = executor.submit(self._command_loop)
                         time.sleep(2)

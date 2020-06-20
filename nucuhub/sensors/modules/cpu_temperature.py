@@ -6,7 +6,7 @@ from nucuhub.domain.sensors.config import SensorConfig, SensorState
 
 class CpuTemperature(SensorModule):
     sensor_id = "cpu_temperature_sensor"
-    file_name = "/sys/class/thermal/thermal_zone3/temp"
+    file_name = "/sys/class/thermal/thermal_zone0/temp"
 
     def _configure(self) -> SensorConfig:
         return SensorConfig(
@@ -23,11 +23,13 @@ class CpuTemperature(SensorModule):
             return [
                 SensorMeasurement(
                     sensor_id=self.sensor_id,
-                    name="thermal_zone2",
+                    name="thermal_zone0",
                     description="CPU package temperature in celsius",
                     value=float(data) / 1000,
                 )
             ]
-        except IOError:
+        except IOError as e:
             self.set_state(SensorState.ERROR)
+            self.disable()
+            self._logger.error(f"CpuTemperatureSensor: {e}")
             return []

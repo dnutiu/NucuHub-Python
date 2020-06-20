@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from nucuhub.domain.sensors.config import SensorConfig, SensorState
 from nucuhub.domain.sensors.exceptions import SensorException
+from nucuhub.logging import get_logger
 from nucuhub.sensors.infrastructure import Database
 
 
@@ -18,6 +19,7 @@ class SensorMeasurement:
 class SensorModule(abc.ABC):
     _config: SensorConfig = None
     _db: Database = Database()
+    _logger = get_logger("SensorModule")
 
     def __init__(self):
         self._initialize()
