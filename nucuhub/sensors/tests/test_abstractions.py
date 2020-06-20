@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 import pytest
 
 from nucuhub.domain.sensors import SensorException
-from nucuhub.sensors.config import SensorState
+from nucuhub.domain.sensors.config import SensorState
 from nucuhub.sensors.tests.mocks import DummySensor
 
 
