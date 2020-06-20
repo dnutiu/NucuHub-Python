@@ -7,6 +7,7 @@ version: '3.3'
 services:
   nucuhub_sensors:
     restart: on-failure
+    privileged: true
     depends_on:
       - redis_service
     build:
