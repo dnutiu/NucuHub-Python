@@ -3,10 +3,11 @@ version: '3.3'
 services:
   redis_service:
     image: redis
-    command: redis-server --appendonly yes
+    command: redis-server /usr/local/etc/redis/redis.conf --appendonly yes
     ports:
         - "6379:6379"
     volumes:
+    - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
     - ./data/redis:/data
     restart: unless-stopped
     networks:

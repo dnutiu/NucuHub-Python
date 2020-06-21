@@ -19,3 +19,15 @@ services:
       - "/sys:/sys"
     networks:
       - nucuhub
+  nucuhub_backend:
+    restart: on-failure
+    depends_on:
+      - redis_service
+      - nucuhub_sensors
+    build:
+      context: .
+      dockerfile: ./nucuhub/backend/Dockerfile
+    ports:
+      - 8080:8080
+    networks:
+      - nucuhub

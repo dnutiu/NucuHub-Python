@@ -1,5 +1,4 @@
 import redis
-
 from nucuhub.config import ApplicationConfig
 from nucuhub.logging import get_logger
 
