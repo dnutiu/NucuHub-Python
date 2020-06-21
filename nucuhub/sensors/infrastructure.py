@@ -20,11 +20,18 @@ class Messaging(RedisBackend):
         self._pubsub.subscribe("sensors_cmd")
 
     def publish(self, data):
+        """
+            Publishes data to the sensors topic on Redis.
+        """
         redis = self.client.get_redis()
         logger.debug(data)
         redis.publish("sensors", json.dumps(data))
 
-    def get_message(self):
+    def get_command(self):
+        """
+            Retrieves a sensor command.
+        :return:  The message data as a python dict.
+        """
         try:
             message = self._pubsub.get_message(
                 ignore_subscribe_messages=True, timeout=1
@@ -36,10 +43,20 @@ class Messaging(RedisBackend):
 
 class Database(RedisBackend):
     def save_config(self, name, data):
+        """
+            Saves sensor config in the database
+        :param name: The key name, usually sensor id.
+        :param data: The configuration data.
+        """
         redis = self.client.get_redis()
         redis.set(name, json.dumps(data))
 
     def load_config(self, name):
+        """
+            Loads the config from the database
+        :param name: The key name, usually sensor id.
+        :return: Returns the configuration data as a python dict if it exists, otherwise none.
+        """
         redis = self.client.get_redis()
         data = redis.get(name)
         return_val = None

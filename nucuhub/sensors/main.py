@@ -60,8 +60,8 @@ class SensorsWorker:
             }
         """
         while self._command_loop_should_run:
-            message = self.message_broker.get_message()
-            self.logger.debug(f"received cmd message: {message}")
+            message = self.message_broker.get_command()
+            self.logger.debug(f"pooling for cmd message, got: {message}")
             if message:
                 sensor_id = message.get("sensor_id")
                 action = message.get("action")

@@ -29,8 +29,8 @@ def test_reading_loop(redis_fixture, sensor_worker):
         sensor_worker._reading_loop_should_run = False
         executor.shutdown()
 
-    pubsub.get_message(ignore_subscribe_messages=True)
-    message = pubsub.get_message(ignore_subscribe_messages=True)
+    pubsub.get_command(ignore_subscribe_messages=True)
+    message = pubsub.get_command(ignore_subscribe_messages=True)
     assert (
         message.get("data").decode()
         == '[{"sensor_id": "dummy_sensor", "name": "test", "description": "test", "value": 2.22}]'
