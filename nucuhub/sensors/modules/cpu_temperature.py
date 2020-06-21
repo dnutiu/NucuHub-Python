@@ -1,5 +1,6 @@
 import typing
 
+from nucuhub.domain import utils
 from nucuhub.domain.sensors import SensorMeasurement, SensorModule
 from nucuhub.domain.sensors.config import SensorConfig, SensorState
 
@@ -26,6 +27,7 @@ class CpuTemperature(SensorModule):
                     name="thermal_zone0",
                     description="CPU package temperature in celsius",
                     value=float(data) / 1000,
+                    timestamp=utils.get_now_timestamp(),
                 )
             ]
         except IOError as e:

@@ -13,6 +13,7 @@ class SensorMeasurement:
     sensor_id: str
     name: str
     description: str
+    timestamp: int
     value: typing.Union[int, float, str]
 
 

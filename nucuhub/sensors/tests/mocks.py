@@ -21,6 +21,7 @@ class DummySensor(SensorModule):
                 name="test",
                 description="test",
                 value=random.choice([1, 0]),
+                timestamp=0,
             )
         ]
 
@@ -37,6 +38,10 @@ class ExactDummySensor(DummySensor):
     def _get_data(self) -> typing.List[SensorMeasurement]:
         return [
             SensorMeasurement(
-                sensor_id="dummy_sensor", name="test", description="test", value=2.22,
+                sensor_id="dummy_sensor",
+                name="test",
+                description="test",
+                value=2.22,
+                timestamp=0,
             )
         ]

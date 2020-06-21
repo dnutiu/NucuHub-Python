@@ -2,6 +2,7 @@ import typing
 
 import bme680
 
+from nucuhub.domain import utils
 from nucuhub.domain.sensors import SensorMeasurement, SensorModule, SensorState
 from nucuhub.domain.sensors.config import SensorConfig
 
@@ -47,12 +48,14 @@ class Bme680(SensorModule):
 
         read_ok = self._sensor.get_sensor_data()
         if read_ok:
+            timestamp = utils.get_now_timestamp()
             return_value.append(
                 SensorMeasurement(
                     sensor_id=self.sensor_id,
                     name="temperature",
                     description="bme680 temperature, celsius",
                     value=self._sensor.data.temperature,
+                    timestamp=timestamp,
                 )
             )
             return_value.append(
@@ -61,6 +64,7 @@ class Bme680(SensorModule):
                     name="pressure",
                     description="bme680 pressure. hPa",
                     value=self._sensor.data.pressure,
+                    timestamp=timestamp,
                 )
             )
             return_value.append(
@@ -69,6 +73,7 @@ class Bme680(SensorModule):
                     name="humidity",
                     description="bme680 humidity, %RH",
                     value=self._sensor.data.humidity,
+                    timestamp=timestamp,
                 )
             )
             return_value.append(
@@ -77,6 +82,7 @@ class Bme680(SensorModule):
                     name="gas_resistance",
                     description="bme680 gas resistance, Ohms",
                     value=self._sensor.data.gas_resistance,
+                    timestamp=timestamp,
                 )
             )
             # If heat_stable is false then gas_resistance is not ok
@@ -86,6 +92,7 @@ class Bme680(SensorModule):
                     name="heat_stable",
                     description="bme680 heat_stable, boolean",
                     value=self._sensor.data.heat_stable,
+                    timestamp=timestamp,
                 )
             )
 
