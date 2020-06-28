@@ -1,6 +1,5 @@
-from starlette.routing import Route
-
 from nucuhub.backend.endpoints import SensorsEndpoint
+from starlette.routing import Route
 
 
 def get_default_routes():
