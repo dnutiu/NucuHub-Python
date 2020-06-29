@@ -22,7 +22,7 @@ share/python-wheels/
 *.egg
 
 
-# Unit test / coverage reports
+# Unit tests / coverage reports
 htmlcov/
 .tox/
 .nox/

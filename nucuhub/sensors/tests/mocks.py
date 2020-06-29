@@ -9,8 +9,8 @@ class DummySensor(SensorModule):
     def _configure(self):
         return SensorConfig(
             id="tid",
-            name="test-sesnro",
-            description="the test description",
+            name="tests-sesnro",
+            description="the tests description",
             enabled=False,
         )
 
@@ -18,8 +18,8 @@ class DummySensor(SensorModule):
         return [
             SensorMeasurement(
                 sensor_id="dummy_sensor",
-                name="test",
-                description="test",
+                name="tests",
+                description="tests",
                 value=random.choice([1, 0]),
                 timestamp=0,
             )
@@ -30,8 +30,8 @@ class ExactDummySensor(DummySensor):
     def _configure(self):
         return SensorConfig(
             id="tid",
-            name="test-sesnro",
-            description="the test description",
+            name="tests-sesnro",
+            description="the tests description",
             enabled=True,
         )
 
@@ -39,8 +39,8 @@ class ExactDummySensor(DummySensor):
         return [
             SensorMeasurement(
                 sensor_id="dummy_sensor",
-                name="test",
-                description="test",
+                name="tests",
+                description="tests",
                 value=2.22,
                 timestamp=0,
             )

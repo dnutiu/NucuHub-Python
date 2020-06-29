@@ -33,8 +33,8 @@ def test_sensor_module_initialize(redis_fixture):
 @pytest.mark.parametrize(
     "getter, expected",
     [
-        pytest.param("name", "test-sesnro"),
-        pytest.param("description", "the test description"),
+        pytest.param("name", "tests-sesnro"),
+        pytest.param("description", "the tests description"),
         pytest.param("is_enabled", False),
     ],
 )

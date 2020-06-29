@@ -16,7 +16,7 @@ def sensor_worker():
     return worker
 
 
-@pytest.mark.skipif(SKIP_SLOW_TESTS, reason="Reading loop test is slow!")
+@pytest.mark.skipif(SKIP_SLOW_TESTS, reason="Reading loop tests is slow!")
 def test_reading_loop(redis_fixture, sensor_worker):
     sensor_worker.sensor_modules = [ExactDummySensor]
     sensor_worker._load_modules()
@@ -33,11 +33,11 @@ def test_reading_loop(redis_fixture, sensor_worker):
     message = pubsub.get_command(ignore_subscribe_messages=True)
     assert (
         message.get("data").decode()
-        == '[{"sensor_id": "dummy_sensor", "name": "test", "description": "test", "value": 2.22}]'
+        == '[{"sensor_id": "dummy_sensor", "name": "tests", "description": "tests", "value": 2.22}]'
     )
 
 
-@pytest.mark.skipif(SKIP_SLOW_TESTS, reason="Command loop test is very slow!")
+@pytest.mark.skipif(SKIP_SLOW_TESTS, reason="Command loop tests is very slow!")
 def test_command_loop(redis_fixture, sensor_worker):
     sensor_worker.sensor_modules = [ExactDummySensor]
     sensor_worker._load_modules()

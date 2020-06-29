@@ -18,6 +18,7 @@ class Messaging(RedisBackend):
         super().__init__()
         self._pubsub = self.client.get_redis().pubsub()
         self._pubsub.subscribe("sensors_cmd")
+        self.logger = get_logger("SensorsMessaging")
 
     def publish(self, data):
         """
@@ -32,13 +33,17 @@ class Messaging(RedisBackend):
             Retrieves a sensor command.
         :return:  The message data as a python dict.
         """
+        return_value = None
         try:
             message = self._pubsub.get_message(
                 ignore_subscribe_messages=True, timeout=1
             )
-            return json.loads(message.get("data"))
-        except (TypeError, AttributeError):
-            return None
+            if message:
+                return_value = json.loads(message.get("data"))
+        except (TypeError, AttributeError) as e:
+            self.logger.debug(f"error in get_message: {e}")
+            return_value = None
+        return return_value
 
 
 class Database(RedisBackend):

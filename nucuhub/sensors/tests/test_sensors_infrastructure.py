@@ -10,9 +10,9 @@ from nucuhub.sensors.infrastructure import Database, Messaging
     "message_data",
     [
         pytest.param({}, id="empty-data"),
-        pytest.param({"sensor": "test", "data": "test"}, id="normal-data"),
+        pytest.param({"sensor": "tests", "data": "tests"}, id="normal-data"),
         pytest.param(
-            {"sensor": "test", "temp": 22.0, "calibrated": True}, id="normal-data"
+            {"sensor": "tests", "temp": 22.0, "calibrated": True}, id="normal-data"
         ),
     ],
 )
