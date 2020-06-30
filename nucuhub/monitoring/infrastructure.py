@@ -46,6 +46,9 @@ class Messaging(RedisBackend):
 
     @staticmethod
     def decode_message_data(message):
+        if not message:
+            return None
+
         return_value = message.get("data")
 
         if isinstance(return_value, bytes):
@@ -53,6 +56,6 @@ class Messaging(RedisBackend):
 
         try:
             return_value = json.loads(return_value)
-        except (TypeError, AttributeError, json.decoder.JSONDecodeError) as e:
+        except (TypeError, AttributeError, json.decoder.JSONDecodeError):
             pass
         return return_value
