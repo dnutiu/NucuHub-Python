@@ -21,19 +21,19 @@ def test_reading_loop(redis_fixture, sensor_worker):
     sensor_worker.sensor_modules = [ExactDummySensor]
     sensor_worker._load_modules()
 
-    pubsub = redis_fixture.get_redis().pubsub()
+    pubsub = sensor_worker.message_broker.client.get_redis().pubsub()
     pubsub.subscribe("sensors")
     with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
         executor.submit(sensor_worker._reading_loop)
-        time.sleep(0.1)
+        time.sleep(5)
         sensor_worker._reading_loop_should_run = False
         executor.shutdown()
 
-    pubsub.get_command(ignore_subscribe_messages=True)
-    message = pubsub.get_command(ignore_subscribe_messages=True)
+    pubsub.get_message()
+    message = pubsub.get_message()
     assert (
         message.get("data").decode()
-        == '[{"sensor_id": "dummy_sensor", "name": "tests", "description": "tests", "value": 2.22}]'
+        == '[{"sensor_id": "dummy_sensor", "name": "tests", "description": "tests", "timestamp": 0, "value": 2.22}]'
     )
 
 
@@ -42,15 +42,15 @@ def test_command_loop(redis_fixture, sensor_worker):
     sensor_worker.sensor_modules = [ExactDummySensor]
     sensor_worker._load_modules()
 
-    pubsub = redis_fixture.get_redis()
-    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+    pubsub = sensor_worker.message_broker.client.get_redis()
+    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
         executor.submit(sensor_worker._command_loop)
         for i in range(3):
             pubsub.publish(
                 "sensors_cmd", json.dumps({"sensor_id": "tid", "action": "disable"})
             )
-            time.sleep(1)
-        time.sleep(1)
+            time.sleep(5)
+        time.sleep(5)
         sensor_worker._command_loop_should_run = False
         executor.shutdown()
 

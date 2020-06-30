@@ -6,9 +6,9 @@ import signal
 import time
 import typing
 
-from nucuhub.domain.sensors import SensorModule
 from nucuhub.logging import get_logger
 from nucuhub.sensors import infrastructure
+from nucuhub.sensors.internals import SensorModule
 
 
 class SensorsWorker:

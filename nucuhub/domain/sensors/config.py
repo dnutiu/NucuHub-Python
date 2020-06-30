@@ -1,10 +1,6 @@
-import enum
 from dataclasses import dataclass
 
-
-class SensorState(enum.Enum):
-    OK = "OK"
-    ERROR = "ERROR"
+from nucuhub.domain.sensors import SensorState
 
 
 @dataclass

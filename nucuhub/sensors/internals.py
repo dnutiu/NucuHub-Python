@@ -1,20 +1,14 @@
 import abc
 import typing
-from dataclasses import dataclass
 
-from nucuhub.domain.sensors.config import SensorConfig, SensorState
-from nucuhub.domain.sensors.exceptions import SensorException
+from nucuhub.domain.sensors import SensorMeasurement, SensorState
+from nucuhub.domain.sensors.config import SensorConfig
 from nucuhub.logging import get_logger
 from nucuhub.sensors.infrastructure import Database
 
 
-@dataclass
-class SensorMeasurement:
-    sensor_id: str
-    name: str
-    description: str
-    timestamp: int
-    value: typing.Union[int, float, str]
+class SensorException(Exception):
+    pass
 
 
 class SensorModule(abc.ABC):
