@@ -3,6 +3,7 @@ from queue import Queue
 import pytest
 
 from nucuhub.monitoring import internals
+from nucuhub.monitoring.tests import mocks
 
 
 def create_producer(queue_max_size, topics):
@@ -10,6 +11,12 @@ def create_producer(queue_max_size, topics):
     producer = internals.Producer(queue)
     producer.set_topics(topics)
     return queue, producer
+
+
+def create_consumer(queue_max_size):
+    queue = Queue(queue_max_size)
+    consumer = internals.Consumer(queue)
+    return queue, consumer
 
 
 @pytest.mark.parametrize(
@@ -78,7 +85,49 @@ def test_producer_process_message_pending(messaging):
 
 
 def test_producer_shutdown(messaging):
-    queue = Queue()
-    producer = internals.Producer(queue)
+    _, producer = create_producer(1, "topics")
     producer.shutdown()
-    assert producer.loop_should_run is False
+    assert producer._loop_should_run is False
+
+
+def test_consumer_shutdown(messaging):
+    _, consumer = create_consumer(1)
+    consumer.shutdown()
+    assert consumer._loop_should_run is False
+
+
+def test_consumer_add_stage():
+    _, consumer = create_consumer(1)
+    test_stage = internals.ConsumerStage()
+    # If nothing happens add is successful.
+    consumer.add_stage(test_stage)
+    with pytest.raises(internals.ConsumerException):
+        consumer.add_stage(test_stage)
+
+
+def test_consumer_remove_stage():
+    _, consumer = create_consumer(1)
+    test_stage = internals.ConsumerStage()
+    test_stage.name = "test-stage"
+    # If nothing happens add is successful.
+    consumer.add_stage(test_stage)
+    assert consumer.remove_stage("test-stage") is True
+    assert consumer.remove_stage("test-stage") is False
+
+
+def test_consumer_process():
+    """
+        Ensure that the consumer can move the message in two distinct stages.
+    :return:
+    """
+    q, consumer = create_consumer(1)
+    test_stage = mocks.MockConsumerStage()
+    test_stage2 = mocks.MockConsumerStageException()
+    consumer.add_stage(test_stage)
+    consumer.add_stage(test_stage2)
+    q.put({"test": True})
+    with pytest.raises(ValueError):
+        consumer._process_message()
+    assert test_stage.processed is True
+    # The queue is empty, the exception should be handled.
+    consumer._process_message()

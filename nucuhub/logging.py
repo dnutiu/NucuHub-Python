@@ -26,6 +26,12 @@ def get_logger(name):
     return logging.getLogger(name)
 
 
+def get_null_logger():
+    logger_ = logging.getLogger("NullLogger")
+    logger_.addHandler(logging.NullHandler())
+    return logger_
+
+
 if __name__ != "__main__":
     basic_configuration()
     logger = get_logger("logging")
