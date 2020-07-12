@@ -19,6 +19,15 @@ services:
       - "/sys:/sys"
     networks:
       - nucuhub
+  nucuhub_monitoring:
+    restart: on-failure
+    depends_on:
+      - redis_service
+    build:
+      context: .
+      dockerfile: ./nucuhub/monitoring/Dockerfile
+    networks:
+      - nucuhub
   nucuhub_backend:
     restart: on-failure
     depends_on:

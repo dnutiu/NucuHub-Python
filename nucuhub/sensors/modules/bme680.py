@@ -1,6 +1,7 @@
 import typing
 
 import bme680
+
 from nucuhub.domain import utils
 from nucuhub.domain.sensors import SensorMeasurement, SensorState
 from nucuhub.domain.sensors.config import SensorConfig

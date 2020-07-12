@@ -149,6 +149,9 @@ class ConsumerStage:
         """
         raise NotImplementedError()
 
+    def __str__(self):
+        return self.name
+
 
 class ConsumerException(Exception):
     pass
@@ -205,6 +208,14 @@ class Consumer(WorkerBase):
                 self._pipeline_stages.remove(stage)
                 return True
         return False
+
+    def loop_forever(self):
+        """
+            Blocking operation that will make the consumer work.
+        :return:
+        """
+        super(Consumer, self).loop_forever()
+        self._loop_forever()
 
     def shutdown(self):
         """

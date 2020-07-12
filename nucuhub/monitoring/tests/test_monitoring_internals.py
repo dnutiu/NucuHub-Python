@@ -53,7 +53,6 @@ def test_producer_process_message_simple(messaging):
     redis = messaging.client.get_redis()
     queue, producer = create_producer(5, "test_topic")
     producer.message_broker.subscribe_to_all()
-
     redis.publish("test_topic", "tm1")
     redis.publish("test_topic", "tm2")
     producer._process_message()  # ignore subscribe message
