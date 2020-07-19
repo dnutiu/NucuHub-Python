@@ -21,6 +21,13 @@ services:
       - nucuhub
   nucuhub_monitoring:
     restart: on-failure
+    environment:
+      FIREBASE_API_KEY=
+      FIREBASE_AUTH_DOMAIN=
+      FIREBASE_DATABASE_URL=
+      FIREBASE_STORAGE_BUCKET=
+      FIREBASE_USER_EMAIL=
+      FIREBASE_USER_PASSWORD=
     depends_on:
       - redis_service
     build:
