@@ -2,6 +2,7 @@ import concurrent.futures
 import queue
 import signal
 import time
+import traceback
 import typing
 
 from nucuhub import logging
@@ -73,15 +74,25 @@ class MonitoringMain:
                 try:
                     if not producer_loop.running() and self._main_loop_is_running:
                         producer_loop.cancel()
+                        exception_tb = "".join(
+                            traceback.TracebackException.from_exception(
+                                producer_loop.exception(timeout=2)
+                            ).format()
+                        )
                         self.logger.warning(
-                            f"restarting producer_loop because it's not running! Err: {producer_loop.exception(timeout=2)}"
+                            f"restarting producer_loop because it's not running! Err: {exception_tb}"
                         )
                         producer_loop = executor.submit(self._producer_work_loop)
                         time.sleep(2)
                     if not consumer_loop.running() and self._main_loop_is_running:
                         consumer_loop.cancel()
+                        exception_tb = "".join(
+                            traceback.TracebackException.from_exception(
+                                consumer_loop.exception(timeout=2)
+                            ).format()
+                        )
                         self.logger.warning(
-                            f"restarting consumer_loop because it's not running! Err: {consumer_loop.exception(timeout=2)}"
+                            f"restarting consumer_loop because it's not running! Err: {exception_tb}"
                         )
                         consumer_loop = executor.submit(self._consumer_work_loop)
                         time.sleep(2)
@@ -107,7 +118,7 @@ class MonitoringMain:
 def main():
     monitoring = MonitoringMain()
     monitoring.add_topics(["sensors"])
-    monitoring.add_stages_workflow([workflows.PrintWorkflow()])
+    monitoring.add_stages_workflow([workflows.SensorsWorkflow()])
     monitoring.loop_forever()
 
 

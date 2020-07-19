@@ -11,9 +11,17 @@ class FirebaseConfiguration:
     auth_domain = None
     database_url = None
     storage_bucket = None
+    user_email = None
+    user_password = None
 
     def __init__(
-        self, api_key=None, auth_domain=None, database_url=None, storage_bucket=None
+        self,
+        api_key=None,
+        auth_domain=None,
+        database_url=None,
+        storage_bucket=None,
+        user_email=None,
+        user_password=None,
     ):
         self.api_key = api_key or ApplicationConfig.FIREBASE_API_KEY
         self.auth_domain = auth_domain or ApplicationConfig.FIREBASE_AUTH_DOMAIN
@@ -21,6 +29,8 @@ class FirebaseConfiguration:
         self.storage_bucket = (
             storage_bucket or ApplicationConfig.FIREBASE_STORAGE_BUCKET
         )
+        self.user_email = user_email or ApplicationConfig.FIREBASE_USER_EMAIL
+        self.user_password = user_password or ApplicationConfig.FIREBASE_USER_PASSWORD
 
     def __str__(self):
         return f"FirebaseConfig: {self.auth_domain};{self.database_url};{self.storage_bucket}"
@@ -29,6 +39,7 @@ class FirebaseConfiguration:
 class FirebaseService:
     __singleton = None
     __client = None
+    __config = None
 
     def __init__(self):
         """
@@ -45,14 +56,17 @@ class FirebaseService:
                     config.auth_domain,
                     config.database_url,
                     config.storage_bucket,
+                    config.user_email,
+                    config.user_password,
                 )
             )
-            is None
+            is False
         ):
             raise ValueError(
                 "FirebaseService has invalid config! Please set all environment variables."
             )
 
+        cls.__config = config
         config = {
             "apiKey": config.api_key,
             "authDomain": config.auth_domain,
@@ -61,6 +75,22 @@ class FirebaseService:
         }
 
         cls.__client = pyrebase.initialize_app(config)
+
+    @classmethod
+    def client(cls):
+        """
+            Gets the underlying firebase client.
+        :return: A Firebase instance.
+        """
+        return cls.__client
+
+    @classmethod
+    def config(cls):
+        """
+            Gets the Firebase configuration
+        :return: A FirebaseConfiguration instance.
+        """
+        return cls.__config
 
     @classmethod
     def instance(cls):

@@ -1,5 +1,7 @@
+import datetime
 import json
 
+from nucuhub.infrastructure.firebase import FirebaseService
 from nucuhub.infrastructure.redis import RedisService
 from nucuhub.logging import get_logger
 
@@ -59,3 +61,42 @@ class Messaging(RedisBackend):
         except (TypeError, AttributeError, json.decoder.JSONDecodeError):
             pass
         return return_value
+
+
+class Firebase(FirebaseService):
+    user = None
+    _token_expire = 0
+
+    @classmethod
+    def ensure_authentication(cls):
+        """
+            Ensure that the firebase request is always authenticated and the token is
+            refreshed before it expires.
+        """
+        auth = cls.client().auth()
+
+        if cls.user is None:
+            cls.user = auth.sign_in_with_email_and_password(
+                cls.config().user_email, cls.config().user_password
+            )
+            cls._token_expire = (
+                int(cls.user["expiresIn"]) + datetime.datetime.now().timestamp()
+            )
+
+        # Check if token is about to expire in the next 10 minutes and refresh the token.
+        if cls._token_expire - datetime.datetime.now().timestamp() < 600:
+            cls.user = auth.refresh(cls.user["refreshToken"])
+
+    @classmethod
+    def _get_id_token(cls):
+        return cls.user["idToken"]
+
+    @classmethod
+    def save(cls, collection_name, data):
+        """
+            Saves the data in Firebase's realtime database.
+        :return: Firebase's push response.
+        """
+        cls.ensure_authentication()
+        db = cls.client().database()
+        return db.child(collection_name).push(data, cls._get_id_token())

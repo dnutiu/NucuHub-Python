@@ -78,9 +78,9 @@ def test_producer_process_message_pending(messaging):
     producer._process_message()  # ignore subscribe message
     producer._process_message()  # process tm1
     producer._process_message()  # queue is full
-    assert messaging.decode_message_data(queue.get(timeout=0.5)) == "tm1"
+    assert messaging.decode_message_data(queue.get(timeout=1)) == "tm1"
     producer._process_message()  # process pending tm2
-    assert messaging.decode_message_data(queue.get(timeout=0.5)) == "tm2"
+    assert messaging.decode_message_data(queue.get(timeout=1)) == "tm2"
 
 
 def test_producer_shutdown(messaging):

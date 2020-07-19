@@ -4,6 +4,7 @@ import pathlib
 import pkgutil
 import signal
 import time
+import traceback
 import typing
 
 from nucuhub.logging import get_logger
@@ -106,18 +107,29 @@ class SensorsWorker:
             reading_loop = executor.submit(self._reading_loop)
             command_loop = executor.submit(self._command_loop)
             while self._worker_loop_should_run:
+                # noinspection DuplicatedCode
                 try:
                     if not reading_loop.running() and self._worker_loop_should_run:
                         reading_loop.cancel()
+                        exception_tb = "".join(
+                            traceback.TracebackException.from_exception(
+                                reading_loop.exception(timeout=2)
+                            ).format()
+                        )
                         self.logger.warning(
-                            f"restarting reading_loop because it's not running! Err: {reading_loop.exception(timeout=2)}"
+                            f"restarting reading_loop because it's not running! Err: {exception_tb}"
                         )
                         reading_loop = executor.submit(self._reading_loop)
                         time.sleep(2)
                     if not command_loop.running() and self._worker_loop_should_run:
                         command_loop.cancel()
+                        exception_tb = "".join(
+                            traceback.TracebackException.from_exception(
+                                command_loop.exception(timeout=2)
+                            ).format()
+                        )
                         self.logger.warning(
-                            f"restarting command_loop because it's not running! Err: {command_loop.exception(timeout=2)}"
+                            f"restarting command_loop because it's not running! Err: {exception_tb}"
                         )
                         reading_loop = executor.submit(self._command_loop)
                         time.sleep(2)
