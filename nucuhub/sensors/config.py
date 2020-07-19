@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from nucuhub.domain.sensors import SensorState
+from nucuhub.sensors.types import SensorState
 
 
 @dataclass

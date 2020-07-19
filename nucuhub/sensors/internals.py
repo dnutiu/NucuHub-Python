@@ -1,10 +1,10 @@
 import abc
 import typing
 
-from nucuhub.domain.sensors import SensorMeasurement, SensorState
-from nucuhub.domain.sensors.config import SensorConfig
 from nucuhub.logging import get_logger
+from nucuhub.sensors.config import SensorConfig
 from nucuhub.sensors.infrastructure import Database
+from nucuhub.sensors.types import SensorMeasurement, SensorState
 
 
 class SensorException(Exception):

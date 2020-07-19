@@ -2,9 +2,9 @@ import typing
 
 import bme680
 from nucuhub.domain import utils
-from nucuhub.domain.sensors import SensorMeasurement, SensorState
-from nucuhub.domain.sensors.config import SensorConfig
+from nucuhub.sensors.config import SensorConfig
 from nucuhub.sensors.internals import SensorModule
+from nucuhub.sensors.types import SensorMeasurement, SensorState
 
 
 class Bme680(SensorModule):
