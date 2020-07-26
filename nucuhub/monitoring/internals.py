@@ -3,9 +3,9 @@ import queue
 import time
 import typing
 
-from nucuhub.domain.utils import is_string
 from nucuhub.logging import get_logger, get_null_logger
 from nucuhub.monitoring import infrastructure
+from nucuhub.utils import is_string
 
 __all__ = [
     "ProducerException",

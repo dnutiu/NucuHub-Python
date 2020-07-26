@@ -9,7 +9,7 @@ import typing
 
 from nucuhub.logging import get_logger
 from nucuhub.sensors import infrastructure
-from nucuhub.sensors.internals import SensorModule
+from nucuhub.sensors.types import SensorModule
 
 
 class SensorsWorker:

@@ -1,9 +1,7 @@
 import random
 import typing
 
-from nucuhub.sensors.config import SensorConfig
-from nucuhub.sensors.internals import SensorModule
-from nucuhub.sensors.types import SensorMeasurement
+from nucuhub.sensors.types import SensorConfig, SensorMeasurement, SensorModule
 
 
 class DummySensor(SensorModule):

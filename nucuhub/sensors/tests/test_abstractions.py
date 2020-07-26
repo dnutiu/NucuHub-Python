@@ -2,9 +2,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from nucuhub.sensors.internals import SensorException
 from nucuhub.sensors.tests.mocks import DummySensor
-from nucuhub.sensors.types import SensorState
+from nucuhub.sensors.types import SensorException, SensorState
 
 
 def test_sensor_module_read(redis_fixture):
