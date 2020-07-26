@@ -1,6 +1,7 @@
 import typing
 
 import bme680
+
 from nucuhub import utils
 
 from nucuhub.sensors.types import (  # isort:skip

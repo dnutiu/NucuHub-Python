@@ -15,6 +15,7 @@ class DebugWorkflow(ConsumerStage):
 
 class SensorsWorkflow(ConsumerStage):
     name = "SensorsWorkflow"
+    firebase_collection = "sensors"
 
     def process(self, message):
         """
@@ -28,6 +29,7 @@ class SensorsWorkflow(ConsumerStage):
         if type == "message" and channel == "sensors":
             data = infrastructure.Messaging.decode_message_data(message)
             db = infrastructure.Firebase.instance()
-            db.save("sensors", data)
+            for data_entry in data:
+                db.save(self.firebase_collection, data_entry)
             stop = True
         return stop
