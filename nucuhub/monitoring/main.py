@@ -99,7 +99,7 @@ class MonitoringMain:
                 except concurrent.futures.CancelledError as e:
                     # We get a canceled error when we cancel tasks.
                     self.logger.warning(e)
-            time.sleep(self.sleep_time)
+                time.sleep(self.sleep_time)
 
     def shutdown(self, signum, frame):
         """
