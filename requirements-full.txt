@@ -1,0 +1,5 @@
+-r requirements.txt
+-r requirements-test.txt
+-r nucuhub/sensors/requirements.txt
+-r nucuhub/monitoring/requirements.txt
+-r nucuhub/backend/requirements.txt

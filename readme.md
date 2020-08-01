@@ -2,6 +2,7 @@ todo
 
 ### Running the tests.
 
-0. Install requirements: `pip -r requirements.txt`
+0. Install requirements: `pip -r requirements-full.txt`
 1. Install the project with: `pip install -e .`
-2. Run pytest: `pytest .`
+2. Start docker services: `docker-compose up`
+3. Run pytest: `pytest .`
